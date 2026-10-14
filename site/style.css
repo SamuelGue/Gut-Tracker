@@ -1,0 +1,86 @@
+:root {
+  --coral: #fe8370;
+  --dark-coral: #d9573f;
+  --bone: #f3ecdd;
+  --bone-light: #faf4e4;
+  --navy: #2a3744;
+  --slate: #4e6876;
+  --border: #d9cfb8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bone);
+  color: var(--navy);
+  font-family: "Host Grotesk", sans-serif;
+  line-height: 1.6;
+}
+
+main { margin: 0; padding: 0; }
+.hero, .card { padding: 3rem max(1.25rem, calc((100% - 960px) / 2)); }
+.hero { background: var(--bone); padding-top: 4rem; padding-bottom: 2rem; }
+.card { counter-increment: sec; }
+.card.intro { counter-increment: none; background: var(--bone); padding-top: 1rem; }
+main > .card:nth-of-type(3n + 2) { background: #ffe6dc; }
+main > .card:nth-of-type(3n + 3) { background: var(--bone-light); }
+main > .card:nth-of-type(3n + 4) { background: #efe3c8; }
+.card > :is(h2, h3):first-child::before {
+  content: counter(sec, decimal-leading-zero);
+  display: block; font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; letter-spacing: 0.12em; color: var(--dark-coral); margin-bottom: 0.25rem;
+}
+.card.intro > h2::before { content: none; }
+.sub { border-top: 1px solid var(--border); margin-top: 1.5rem; padding-top: 1.5rem; }
+.card p { margin: 0 0 0.75rem; }
+
+h1, h2 { font-family: "Averia Serif Libre", serif; color: var(--navy); line-height: 1.2; }
+h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+.subtitle { font-family: "Averia Serif Libre", serif; font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--dark-coral); margin: 0 0 1.5rem; }
+h2 { font-size: 1.6rem; font-weight: 400; margin: 0 0 0.75rem; }
+h3, .label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dark-coral);
+  margin: 0 0 0.75rem;
+}
+
+.card p:last-child { margin-bottom: 0; }
+
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+label { display: flex; flex-direction: column; gap: 0.25rem; font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--slate); }
+input, select {
+  font: inherit; font-family: "Host Grotesk", sans-serif; font-size: 1rem; color: var(--navy);
+  background: var(--bone); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 0.75rem;
+}
+.signals { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-bottom: 1rem; }
+.signals label { flex-direction: row; align-items: center; gap: 0.4rem; }
+.signals input { padding: 0; accent-color: var(--coral); }
+
+.buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+button {
+  font-family: "Host Grotesk", sans-serif; font-weight: 600; font-size: 1rem; color: var(--navy);
+  background: transparent; border: 1px solid var(--navy); border-radius: 999px; padding: 0.6rem 1.4rem; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+button:hover:not(:disabled) { background: var(--navy); color: var(--bone); }
+button.primary { background: var(--coral); border-color: var(--coral); }
+button.primary:hover:not(:disabled) { background: var(--navy); border-color: var(--navy); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.link-button {
+  font-family: "Host Grotesk", sans-serif; font-weight: 600; font-size: 1rem; color: var(--navy); text-decoration: none;
+  border: 1px solid var(--navy); border-radius: 999px; padding: 0.6rem 1.4rem; transition: background 0.15s, color 0.15s;
+}
+.link-button:hover { background: var(--navy); color: var(--bone); }
+
+#status { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--slate); margin-top: 0.75rem; min-height: 1.2em; }
+#recording-row { margin: 0; max-width: 260px; }
+.plot-bar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.state-dot { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+#matrix { overflow-x: auto; font-size: 1.3rem; }
+#loglik { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--slate); }
+.card p.caption { font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; color: var(--slate); margin-top: 1rem; }
+[hidden] { display: none !important; }

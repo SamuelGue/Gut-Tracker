@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Gut Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&family=Averia+Serif+Libre:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <h1>Your Gut Tracker</h1>
+    <p class="subtitle">What I would build at Suna (that nobody asked for)</p>
+  </header>
+
+  <section class="card intro">
+    <p>Welcome to Your Gut Tracker! This is your one-stop-shop for tracking and analysing your gut health.</p>
+    <h2>'Your wearables track your heart, your sleep, your steps. But nothing tracks your gut.'</h2>
+    <p>This is what sent me down the rabbit hole of what it even means to track your gut, and it shows that so few people actually know what to look for. Suna has been on my radar for a while, and it has led me to explore what it takes to understand what happens in the gut.</p>
+  </section>
+
+  <section class="card">
+    <h2>How do we know when something is out of balance?</h2>
+    <p>Daily tracking is an important part of understanding your gut health. However, what do you do when something seems off? Maybe you changed your diet and now your daily score is changing. How do you interpret these changes? It's not an easy question to answer, your gut certainly won't be the same for your whole life, and a change in lifestyle shouldn't always be a cause for concern.</p>
+  </section>
+
+  <section class="card">
+    <h2>The Model</h2>
+    <p>Everyone's gut is different, and so having a unique profile for your gut is essential. However, one profile can only capture so much. Your 'normal' might change from day to day, week to week, or even season to season, and your gut health tracker should adapt accordingly. The purpose of this model is to introduce the technique of Hidden Markov Models (HMMs) to gain an insight into how your normal changes over time.</p>
+  </section>
+
+  <section class="card">
+    <h2>The Signals</h2>
+    <p>The gut communicates with the rest of the body, often without anyone noticing. Your sleep schedule, your diet, your physical activity all have impacts. Suna measures noise, heartrate, temperature, motion, and many more things to build a picture bespoke to you.</p>
+  </section>
+
+  <section class="card">
+    <h2>How does it work?</h2>
+    <p>A Hidden Markov Model is a statistical way to pull out hidden patterns from sequential data. It allows us to learn what kind of state our gut is in over long periods of time. It differs from a traditional model in that it considers all the past signals when deciding the current state. You can say it learns your gut's normal patterns over time.</p>
+  </section>
+
+  <section class="card">
+    <h2>Try it</h2>
+    <div class="controls">
+      <label>Recordings <input id="count" type="number" min="1" max="100" value="10"></label>
+      <label>Samples per recording <input id="length" type="number" min="2" max="2000" value="100"></label>
+      <label>Random seed (optional) <input id="seed" type="number" min="0" placeholder="Random"></label>
+      <label>Hidden states <input id="states" type="number" min="2" max="10" value="4"></label>
+    </div>
+    <div class="signals" id="signals">
+      <label><input type="checkbox" value="noise" checked> noise</label>
+      <label><input type="checkbox" value="heartrate" checked> heartrate</label>
+      <label><input type="checkbox" value="temperature" checked> temperature</label>
+      <label><input type="checkbox" value="motion" checked> motion</label>
+    </div>
+    <div class="buttons">
+      <button id="generate" disabled>Generate new data</button>
+      <button id="train" class="primary" disabled>Train new model</button>
+      <button id="view-matrix" hidden>View transition matrix</button>
+    </div>
+    <div id="status"></div>
+
+    <div id="results" hidden>
+      <div class="sub">
+        <div class="plot-bar">
+          <label id="recording-row">Recording <select id="recording"></select></label>
+          <button id="view-mode">Show standardised values</button>
+        </div>
+        <div id="plot"></div>
+      </div>
+      <div class="sub" id="compare-card" hidden>
+        <h3>Compare states</h3>
+        <p id="compare-desc">Pick which states to compare. Each graph shows all of your measurements while you're in one state, across all of the recordings. The measurements are put on the same scale so they can sit side by side.</p>
+        <button id="compare-mode">Group by measurement</button>
+        <div class="signals" id="state-picks"></div>
+        <div id="compare-plot"></div>
+      </div>
+      <div class="sub" id="matrix-card" hidden>
+        <h3>Transition matrix</h3>
+        <div id="matrix"></div>
+        <div id="loglik"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>How do I interpret the results?</h2>
+    <p>Each state is like a state of your body. One might be a calm, restful state, and another might be a busier, more active one. The model doesn't know what to call them, it just notices when your signals start to look different, and gives each pattern a number. The numbers don't mean one state is better than another, they're just names.</p>
+    <p>The top graphs show each of your signals over time. If you want to compare them directly, the button above them squeezes everything onto one shared scale. The graph underneath shows which state the model thinks you were in at each moment. When the line stays flat, you're staying in the same state. When it jumps, something has changed.</p>
+    <p>The compare states section shows what your signals look like in each state. Use the button to switch between one graph per state or one graph per measurement. Each box covers the middle half of the values, with the line inside marking the typical value. Untick a state to take it out and make the others easier to compare.</p>
+    <p>The transition matrix tells you how likely you are to switch between states. Each row is the state you're in now, and each number in that row is the chance of being in each state next. Every row adds up to 1. A big number on the diagonal means you tend to stay in a state for a while. If a row is split evenly, like 0.5 and 0.5, the model is basically guessing, and there isn't a clear pattern.</p>
+    <p>The fit score shows how well the model matches a recording. The closer it is to zero, the better the match.</p>
+    <p>Remember that a state is just a pattern in your signals, not a diagnosis. A change of state tells you something is different, but not why.</p>
+    <p class="caption">Not actual data, for demonstration purposes only.</p>
+  </section>
+  <section class="card" id="contact">
+    <h2>Get in touch</h2>
+    <p>Want to know more about this project, or just say hello? You can find me here.</p>
+    <div class="buttons">
+      <a class="link-button" href="https://www.linkedin.com/in/samuel-gue-phd/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="link-button" href="https://github.com/SamuelGue" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </section>
+</main>
+</body>
+</html>
